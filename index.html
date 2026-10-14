@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>초등 속담 팡팡! 퀴즈 탐험대</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts (Jua & Pretendard) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            title: ['Jua', 'sans-serif'],
+            sans: ['Noto Sans KR', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              yellow: '#FDE047',
+              orange: '#FB923C',
+              coral: '#F87171',
+              green: '#4ADE80',
+              blue: '#38BDF8',
+              purple: '#A855F7',
+            }
+          },
+          keyframes: {
+            bounceSmall: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-6px)' },
+            },
+            shake: {
+              '0%, 100%': { transform: 'translateX(0)' },
+              '20%, 60%': { transform: 'translateX(-8px)' },
+              '40%, 80%': { transform: 'translateX(8px)' },
+            },
+            pop: {
+              '0%': { transform: 'scale(0.8)', opacity: '0' },
+              '100%': { transform: 'scale(1)', opacity: '1' },
+            }
+          },
+          animation: {
+            bounceSmall: 'bounceSmall 2s infinite ease-in-out',
+            shake: 'shake 0.4s ease-in-out',
+            pop: 'pop 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .font-title {
+      font-family: 'Jua', sans-serif;
+    }
+    /* 스크롤바 커스텀 */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+  </style>
+</head>
+<body class="bg-gradient-to-br from-amber-100 via-orange-50 to-emerald-100 min-h-screen text-slate-800 flex flex-col justify-between items-center p-3 md:p-5">
+
+  <!-- 상단 네비게이션 헤더 -->
+  <header class="w-full max-w-2xl flex items-center justify-between py-2 md:py-3 px-2">
+    <div class="flex items-center gap-2">
+      <span class="text-3xl animate-bounceSmall">🐯</span>
+      <div>
+        <h1 class="font-title text-2xl md:text-3xl text-amber-800 tracking-wide drop-shadow-sm flex items-center gap-1.5">
+          속담 10연승! <span class="text-orange-600">도전대</span>
+        </h1>
+        <p class="text-[11px] md:text-xs text-amber-700 font-semibold">단 한 번도 안 틀리고 10연속 맞히기!</p>
+      </div>
+    </div>
+    
+    <div class="flex items-center gap-2">
+      <!-- 최고 연속 기록 표시 -->
+      <div class="bg-white/90 border border-amber-200 text-amber-900 px-3 py-1.5 rounded-2xl shadow-sm text-xs font-bold flex items-center gap-1">
+        <span>최고기록:</span>
+        <span id="headerBestStreak" class="text-orange-600 font-black text-sm">0/10</span>
+      </div>
+      <!-- 음소거 토글 버튼 -->
+      <button id="soundToggleBtn" class="bg-white/90 border border-amber-200 text-amber-800 p-2 rounded-2xl shadow-sm hover:bg-amber-50 active:scale-95 transition text-sm" title="효과음 토글">
+        <span id="soundIcon">🔊</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 메인 컨테이너 -->
+  <main class="w-full max-w-2xl flex-1 flex flex-col justify-center my-2">
+    
+    <!-- 1. 시작 화면 (Intro Screen) -->
+    <section id="startScreen" class="bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-xl border-4 border-amber-200 flex flex-col items-center text-center animate-pop">
+      <div class="w-24 h-24 bg-gradient-to-tr from-orange-400 to-amber-300 rounded-3xl flex items-center justify-center text-5xl mb-4 shadow-lg shadow-orange-100 animate-bounceSmall text-white">
+        🎯
+      </div>
+      
+      <span class="bg-orange-100 text-orange-800 text-xs md:text-sm font-extrabold px-3.5 py-1 rounded-full mb-2 border border-orange-200">
+        초등 4~6학년 국어 필수 속담 48제
+      </span>
+      <h2 class="font-title text-3xl md:text-4xl text-slate-800 mb-2">
+        10연속 정답 챌린지! 🔥
+      </h2>
+      <p class="text-slate-600 text-sm md:text-base max-w-md mb-6 leading-relaxed">
+        중간에 단 한 번이라도 틀리면 <strong class="text-rose-600">0연승으로 리셋!</strong><br>
+        침착하게 집중해서 10연속 정답을 달성하고 <strong class="text-amber-600">속담 마스터 왕관👑</strong>을 차지하세요!
+      </p>
+
+      <!-- 규칙 카드 안내 -->
+      <div class="grid grid-cols-3 gap-2.5 w-full max-w-md mb-6 text-left">
+        <div class="bg-amber-50 border border-amber-200 rounded-2xl p-3 text-center">
+          <div class="text-xl mb-1">🔥</div>
+          <div class="font-bold text-xs text-amber-900">10연승 목표</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">연속 10개 맞히기</div>
+        </div>
+        <div class="bg-rose-50 border border-rose-200 rounded-2xl p-3 text-center">
+          <div class="text-xl mb-1">⚡</div>
+          <div class="font-bold text-xs text-rose-900">오답 시 리셋</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">0개부터 재도전</div>
+        </div>
+        <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-3 text-center">
+          <div class="text-xl mb-1">💡</div>
+          <div class="font-bold text-xs text-emerald-900">2중 힌트 제공</div>
+          <div class="text-[11px] text-slate-500 mt-0.5">초성 & 속뜻 힌트</div>
+        </div>
+      </div>
+
+      <!-- 캐릭터 선택 -->
+      <div class="w-full max-w-md mb-6">
+        <label class="block text-xs md:text-sm font-bold text-slate-700 mb-2">도전할 탐험가 아바타</label>
+        <div class="grid grid-cols-4 gap-2.5" id="avatarSelector">
+          <button type="button" data-avatar="🐯" class="avatar-btn p-3 text-3xl rounded-2xl border-2 border-orange-500 bg-orange-50 shadow-sm transition transform hover:scale-105 active:scale-95">🐯</button>
+          <button type="button" data-avatar="🐰" class="avatar-btn p-3 text-3xl rounded-2xl border-2 border-slate-200 bg-slate-50 transition transform hover:scale-105 active:scale-95">🐰</button>
+          <button type="button" data-avatar="🐻" class="avatar-btn p-3 text-3xl rounded-2xl border-2 border-slate-200 bg-slate-50 transition transform hover:scale-105 active:scale-95">🐻</button>
+          <button type="button" data-avatar="🦊" class="avatar-btn p-3 text-3xl rounded-2xl border-2 border-slate-200 bg-slate-50 transition transform hover:scale-105 active:scale-95">🦊</button>
+        </div>
+      </div>
+
+      <!-- 도전 시작 버튼 -->
+      <button id="startChallengeBtn" class="w-full max-w-md bg-gradient-to-r from-orange-500 via-amber-500 to-yellow-500 hover:from-orange-600 hover:to-amber-600 text-white font-title text-2xl py-4 rounded-2xl shadow-lg hover:shadow-orange-200 transition transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2">
+        <span>10연속 퀴즈 도전 시작!</span>
+        <span>🚀</span>
+      </button>
+    </section>
+
+    <!-- 2. 퀴즈 화면 (Quiz Screen) -->
+    <section id="quizScreen" class="hidden bg-white/95 backdrop-blur-md rounded-3xl p-4 md:p-7 shadow-xl border-4 border-amber-200 flex flex-col">
+      
+      <!-- 상단 현황판: 연속 정답 게이지 & 10개 불꽃 뱃지 -->
+      <div class="bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl p-3.5 mb-4 border border-amber-200 shadow-sm">
+        <div class="flex items-center justify-between mb-2">
+          <div class="flex items-center gap-2">
+            <span id="playerAvatar" class="text-2xl">🐯</span>
+            <span class="font-title text-base md:text-lg text-slate-800">
+              현재 연속 정답: <span id="currentStreakNum" class="text-orange-600 text-xl font-black">0</span> / 10
+            </span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span id="streakCheer" class="text-xs font-extrabold text-orange-700 bg-orange-100 border border-orange-300 px-2.5 py-1 rounded-full animate-bounceSmall">
+              10연승까지 화이팅! 💪
+            </span>
+          </div>
+        </div>
+
+        <!-- 10단계 인디케이터 구슬 -->
+        <div class="grid grid-cols-10 gap-1 md:gap-1.5 pt-1" id="streakNodesContainer">
+          <!-- 1~10 노드가 JS로 생성됨 -->
+        </div>
+
+        <!-- 게이지 바 -->
+        <div class="w-full bg-slate-200 rounded-full h-2 mt-2.5 overflow-hidden">
+          <div id="streakProgressBar" class="bg-gradient-to-r from-amber-400 to-orange-500 h-2 rounded-full transition-all duration-300 w-0"></div>
+        </div>
+      </div>
+
+      <!-- 문제 카드 영역 -->
+      <div class="bg-gradient-to-b from-amber-50/70 to-orange-50/40 border-2 border-dashed border-amber-200 rounded-2xl p-5 md:p-6 text-center mb-4 relative">
+        <div class="flex items-center justify-between mb-2">
+          <span id="categoryBadge" class="inline-block bg-white text-amber-800 text-xs font-bold px-3 py-1 rounded-full border border-amber-200 shadow-sm">
+            지혜와 교훈
+          </span>
+          <span class="text-xs font-bold text-slate-500">
+            총 시도: <span id="totalQuestionsAnswered" class="text-slate-800 font-extrabold">0</span>문제
+          </span>
+        </div>
+
+        <!-- 속담 본문 (빈칸 강조) -->
+        <h3 id="questionText" class="font-title text-xl md:text-2xl lg:text-3xl text-slate-900 leading-snug tracking-wide py-2">
+          가는 말이 고와야 <span class="inline-block text-orange-600 bg-orange-100/90 border-b-4 border-orange-400 px-3 py-0.5 rounded-xl mx-1 shadow-sm font-extrabold">[ ? ]</span> 이/가 곱다
+        </h3>
+
+        <!-- 힌트 버튼 영역 (초성 힌트 & 뜻 힌트) -->
+        <div class="mt-3 flex flex-wrap items-center justify-center gap-2">
+          <button id="initialHintBtn" class="text-xs text-amber-800 bg-amber-100/90 hover:bg-amber-200 font-bold px-3 py-1.5 rounded-full transition active:scale-95 flex items-center gap-1 shadow-sm">
+            💡 <span>초성 힌트</span>
+          </button>
+          <button id="meaningHintBtn" class="text-xs text-indigo-800 bg-indigo-100/90 hover:bg-indigo-200 font-bold px-3 py-1.5 rounded-full transition active:scale-95 flex items-center gap-1 shadow-sm">
+            💬 <span>속담 뜻 힌트</span>
+          </button>
+        </div>
+
+        <!-- 힌트 표시 상자들 -->
+        <div id="initialHintBox" class="hidden mt-2.5 text-xs md:text-sm font-bold text-amber-900 bg-yellow-100/90 border border-yellow-300 px-4 py-2 rounded-xl animate-pop">
+          초성: <span id="initialHintText" class="text-orange-600 font-black tracking-wider text-sm md:text-base">ㅇㄴ ㅁ</span>
+        </div>
+        <div id="meaningHintBox" class="hidden mt-2 text-xs md:text-sm text-indigo-950 bg-indigo-50 border border-indigo-200 px-4 py-2 rounded-xl leading-relaxed text-left animate-pop font-medium">
+          💡 <span id="meaningHintText">속담의 뜻이 표시됩니다.</span>
+        </div>
+      </div>
+
+      <!-- 4지선다 보기 버튼 리스트 -->
+      <div id="optionsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 mb-2">
+        <!-- JS로 동적 생성 -->
+      </div>
+
+      <!-- 정답 통과 피드백 알림창 (정답 시 노출) -->
+      <div id="correctFeedbackBox" class="hidden rounded-2xl p-3.5 mt-2 transition-all animate-pop border-2 bg-emerald-50 border-emerald-300">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <span class="text-2xl">🎉</span>
+            <div>
+              <h4 class="font-title text-base md:text-lg text-emerald-800 font-bold" id="correctFeedbackTitle">
+                정답입니다! (+1연승)
+              </h4>
+              <p class="text-xs text-slate-600" id="correctProverbMeaning"></p>
+            </div>
+          </div>
+          <button id="nextQuestionBtn" class="bg-emerald-600 hover:bg-emerald-700 text-white font-title text-sm px-4 py-2.5 rounded-xl shadow active:scale-95 transition flex items-center gap-1 whitespace-nowrap">
+            <span>다음</span> ➔
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- 3. 오답 모달 알림창 (연속 실패 시 팝업) -->
+    <div id="failModal" class="hidden fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 animate-pop">
+      <div class="bg-white rounded-3xl p-6 md:p-8 max-w-md w-full shadow-2xl border-4 border-rose-300 text-center flex flex-col items-center">
+        <div class="w-20 h-20 bg-rose-100 rounded-full flex items-center justify-center text-4xl mb-3 border-2 border-rose-200 animate-shake">
+          😢
+        </div>
+
+        <span class="bg-rose-100 text-rose-700 text-xs font-black px-3 py-1 rounded-full mb-1">
+          연속 정답 실패! 스트릭 리셋
+        </span>
+        <h3 class="font-title text-2xl md:text-3xl text-slate-800 mb-2">
+          아쉽게 <span id="failedStreakCount" class="text-rose-600 font-black">3</span>연승에서 멈췄어요!
+        </h3>
+
+        <!-- 정답 및 뜻 복습 카드 -->
+        <div class="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 my-3 text-left">
+          <div class="text-xs text-slate-500 font-bold mb-1">풀던 속담 정답:</div>
+          <div id="failProverbFull" class="font-title text-lg text-slate-900 mb-2 pb-2 border-b border-slate-200">
+            가는 말이 고와야 <span class="text-emerald-600">[오는 말]</span>이 곱다
+          </div>
+          <div class="text-xs text-slate-600 leading-relaxed" id="failProverbMeaning">
+            내가 남에게 말을 좋게 해야 남도 나에게 좋게 대한다는 뜻이에요.
+          </div>
+        </div>
+
+        <p class="text-xs text-slate-500 mb-5">
+          실패는 성공의 어머니! 다음엔 꼭 10문제를 연속으로 맞혀봐요!
+        </p>
+
+        <!-- 재도전 버튼 -->
+        <button id="retryStreakBtn" class="w-full bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white font-title text-xl py-3.5 rounded-2xl shadow-lg transition active:scale-95 flex items-center justify-center gap-2">
+          <span>🔄 처음부터 다시 10연승 도전하기</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 4. 10연속 성공 축하 화면 (Success Screen) -->
+    <section id="successScreen" class="hidden bg-white/95 backdrop-blur-md rounded-3xl p-6 md:p-8 shadow-2xl border-4 border-yellow-300 flex flex-col items-center text-center animate-pop relative">
+      <canvas id="confettiCanvas" class="fixed inset-0 pointer-events-none z-50"></canvas>
+
+      <div class="text-7xl mb-3 animate-bounceSmall">👑</div>
+      
+      <span class="bg-gradient-to-r from-amber-400 to-orange-500 text-white text-xs md:text-sm font-extrabold px-4 py-1 rounded-full mb-2 shadow-sm">
+        미션 완수! 10연속 정답 성공!
+      </span>
+      <h2 class="font-title text-3xl md:text-4xl text-slate-800 mb-1">
+        대단해요! 전설의 속담 마스터 등극!
+      </h2>
+      <p class="text-slate-600 text-sm md:text-base max-w-md mb-6">
+        단 한 번도 틀리지 않고 10문제를 완벽하게 풀어냈어요!<br>
+        이제 초등학교 속담 최고 실력자로 인정합니다!
+      </p>
+
+      <!-- 성과 통계 카드 -->
+      <div class="grid grid-cols-3 gap-3 w-full max-w-md bg-amber-50 border border-amber-200 rounded-2xl p-4 mb-6">
+        <div class="flex flex-col items-center">
+          <span class="text-xs text-slate-500 font-bold">최종 연승</span>
+          <span class="font-title text-2xl md:text-3xl text-orange-600 mt-1">10 / 10 🔥</span>
+        </div>
+        <div class="flex flex-col items-center border-x border-amber-200">
+          <span class="text-xs text-slate-500 font-bold">총 도전 수</span>
+          <span id="finalAttemptsCount" class="font-title text-2xl md:text-3xl text-slate-800 mt-1">12문제</span>
+        </div>
+        <div class="flex flex-col items-center">
+          <span class="text-xs text-slate-500 font-bold">획득 칭호</span>
+          <span class="font-title text-sm md:text-base text-emerald-700 font-bold mt-2">속담 대장군 🎖️</span>
+        </div>
+      </div>
+
+      <!-- 성공 시 액션 버튼 -->
+      <div class="flex flex-col sm:flex-row gap-3 w-full max-w-md">
+        <button id="newChallengeBtn" class="flex-1 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-title text-lg py-3.5 rounded-2xl shadow transition active:scale-95">
+          🎉 새로운 10연승 또 도전하기!
+        </button>
+        <button id="toggleMasteredListBtn" class="bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 font-title text-lg py-3.5 px-4 rounded-2xl shadow-sm transition active:scale-95">
+          📜 맞힌 속담 보기
+        </button>
+      </div>
+
+      <!-- 10연승으로 맞힌 속담 복습 창 -->
+      <div id="masteredListContainer" class="hidden w-full max-w-md text-left bg-slate-50 border border-slate-200 rounded-2xl p-4 mt-4 max-h-60 overflow-y-auto">
+        <h4 class="font-bold text-xs text-slate-700 mb-2 border-b pb-1.5 flex justify-between">
+          <span>내가 10연속으로 맞힌 속담들</span>
+          <span class="text-emerald-600 font-black">10개 완료</span>
+        </h4>
+        <div id="masteredProverbList" class="space-y-2 text-xs">
+          <!-- JS 렌더링 -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 하단 푸터 -->
+  <footer class="w-full max-w-2xl text-center py-2 text-xs text-slate-500 font-medium">
+    초등학교 4~6학년 국어 교과 연계 • 10연속 정답 도전 속담 탐험대
+  </footer>
+
+  <!-- 자바스크립트 로직 -->
+  <script>
+    /* ==========================================================
+       1. 초등학교 4~6학년 필수 속담 데이터베이스 (48개 수록)
+       ========================================================== */
+    const PROVERB_DATABASE = [
+      {
+        question: "가는 말이 고와야 [ 빈칸 ]이/가 곱다",
+        blank: "오는 말",
+        initialHint: "ㅇㄴ ㅁ",
+        options: ["오는 말", "가는 정", "웃는 얼굴", "돌아오는 말"],
+        category: "배려와 말조심",
+        meaning: "내가 남에게 말을 좋게 해야 남도 나에게 곱게 말한다는 뜻으로, 서로 존중해야 함을 뜻해요."
+      },
+      {
+        question: "낮말은 새가 듣고 [ 빈칸 ]은/는 쥐가 듣는다",
+        blank: "밤말",
+        initialHint: "ㅂㅁ",
+        options: ["밤말", "뒷말", "속엣말", "귓속말"],
+        category: "말조심",
+        meaning: "아무리 비밀스럽게 한 말이라도 반드시 소문이 나니, 언제나 말을 조심하라는 교훈이에요."
+      },
+      {
+        question: "발 없는 말이 [ 빈칸 ] 간다",
+        blank: "천 리",
+        initialHint: "ㅊ ㄹ",
+        options: ["천 리", "백 리", "만 리", "바다 건너"],
+        category: "소문과 말조심",
+        meaning: "말이나 소문은 순식간에 아주 멀리까지 퍼지므로 함부로 말을 퍼뜨려선 안 된다는 뜻이에요."
+      },
+      {
+        question: "티끌 모아 [ 빈칸 ]",
+        blank: "태산",
+        initialHint: "ㅌㅅ",
+        options: ["태산", "바위", "동산", "보물"],
+        category: "근면과 저축",
+        meaning: "아무리 작고 하찮은 것이라도 차곡차곡 모으면 큰 덩어리가 된다는 꾸준함의 교훈이에요."
+      },
+      {
+        question: "호랑이도 제 말 하면 [ 빈칸 ]",
+        blank: "온다",
+        initialHint: "ㅇㄷ",
+        options: ["온다", "웃는다", "화낸다", "도망간다"],
+        category: "생활의 신기함",
+        meaning: "어떤 사람에 대해 이야기하고 있을 때 우연히 그 사람이 딱 맞춰 나타날 때 쓰는 속담이에요."
+      },
+      {
+        question: "콩 심은 데 콩 나고 [ 빈칸 ] 심은 데 팥 난다",
+        blank: "팥",
+        initialHint: "ㅍ",
+        options: ["팥", "쌀", "보리", "깨"],
+        category: "원인과 결과",
+        meaning: "모든 일은 원인이 있어야 결과가 생겨나며, 노력한 만큼 결실을 본다는 뜻이에요."
+      },
+      {
+        question: "백지장도 맞들면 [ 빈칸 ]",
+        blank: "낫다",
+        initialHint: "ㄴㄷ",
+        options: ["낫다", "쉽다", "가볍다", "좋다"],
+        category: "협동과 나눔",
+        meaning: "아무리 가벼운 종이 한 장이라도 함께 들면 더 가볍듯이, 협력하면 일이 훨씬 쉬워져요."
+      },
+      {
+        question: "돌다리도 [ 빈칸 ] 보고 건너라",
+        blank: "두들겨",
+        initialHint: "ㄷㄷㄱ",
+        options: ["두들겨", "쳐다", "밟아", "만져"],
+        category: "신중과 침착",
+        meaning: "아주 잘 아는 쉬운 일이라도 실수하지 않도록 꼼꼼하게 살피고 신중히 행동하라는 말이에요."
+      },
+      {
+        question: "우물 안 [ 빈칸 ]",
+        blank: "개구리",
+        initialHint: "ㄱㄱㄹ",
+        options: ["개구리", "올챙이", "물고기", "도롱뇽"],
+        category: "시야와 겸손",
+        meaning: "넓은 세상을 알지 못하고 자기 좁은 경험이나 생각만 옳다고 고집하는 사람을 뜻해요."
+      },
+      {
+        question: "고생 끝에 [ 빈칸 ]이/가 온다",
+        blank: "낙",
+        initialHint: "ㄴ",
+        options: ["낙", "복", "돈", "봄"],
+        category: "인내와 희망",
+        meaning: "어렵고 힘든 일을 꾹 참고 성실히 견뎌내면 결국에는 기쁘고 즐거운 날이 온다는 뜻이에요."
+      },
+      {
+        question: "쇠뿔도 [ 빈칸 ]에 빼라",
+        blank: "단김",
+        initialHint: "ㄷㄱ",
+        options: ["단김", "한 번", "첫날", "그날"],
+        category: "실천과 결단",
+        meaning: "좋은 기회가 왔을 때 망설이거나 미루지 말고 곧바로 해치워야 성과를 낼 수 있다는 말이에요."
+      },
+      {
+        question: "벼는 익을수록 [ 빈칸 ]을/를 숙인다",
+        blank: "고개",
+        initialHint: "ㄱㄱ",
+        options: ["고개", "허리", "잎사귀", "줄기"],
+        category: "겸손과 지혜",
+        meaning: "지식과 실력을 갖춘 훌륭한 사람일수록 거만하게 굴지 않고 더욱 겸손해진다는 뜻이에요."
+      },
+      {
+        question: "세 살 버릇 [ 빈칸 ]까지 간다",
+        blank: "여든",
+        initialHint: "ㅇㄷ",
+        options: ["여든", "백 살", "환갑", "평생"],
+        category: "습관의 힘",
+        meaning: "어릴 때 몸에 밴 나쁜 버릇은 늙어서까지 고치기 힘드니 좋은 습관을 들여야 해요."
+      },
+      {
+        question: "등잔 밑이 [ 빈칸 ]",
+        blank: "어둡다",
+        initialHint: "ㅇㄷㄷ",
+        options: ["어둡다", "밝다", "뜨겁다", "흐리다"],
+        category: "관찰과 주의",
+        meaning: "가까운 곳에서 일어난 일을 오히려 멀리 있는 일보다 더 모를 수 있으니 주변을 잘 살피라는 뜻이에요."
+      },
+      {
+        question: "바늘 도둑이 [ 빈칸 ] 도둑 된다",
+        blank: "소",
+        initialHint: "ㅅ",
+        options: ["소", "말", "집", "황금"],
+        category: "도덕과 양심",
+        meaning: "사소한 나쁜 짓이라도 반성하지 않고 계속하면 나중에는 큰 죄를 짓게 된다는 경고예요."
+      },
+      {
+        question: "소 잃고 [ 빈칸 ] 고친다",
+        blank: "외양간",
+        initialHint: "ㅇㅇㄱ",
+        options: ["외양간", "울타리", "대문", "마구간"],
+        category: "사전 대비",
+        meaning: "이미 일이 잘못되어 큰 피해를 입은 뒤에는 뒤늦게 수습해 봐야 소용없다는 뜻이에요."
+      },
+      {
+        question: "아니 땐 굴뚝에 [ 빈칸 ] 날까",
+        blank: "연기",
+        initialHint: "ㅇㄱ",
+        options: ["연기", "불꽃", "바람", "재"],
+        category: "인과 관계",
+        meaning: "원인이 전혀 없으면 소문이나 결과가 생길 리 없으므로, 모든 일에는 근본 이유가 있다는 말이에요."
+      },
+      {
+        question: "꿩 대신 [ 빈칸 ]",
+        blank: "닭",
+        initialHint: "ㄷ",
+        options: ["닭", "비둘기", "참새", "오리"],
+        category: "융통성",
+        meaning: "가장 원하던 것이 없을 때 그와 비슷한 것으로 대신 슬기롭게 만족함을 뜻해요."
+      },
+      {
+        question: "열 번 찍어 [ 빈칸 ] 나무 없다",
+        blank: "안 넘어가는",
+        initialHint: "ㅇ ㄴㅁㄱㄴ",
+        options: ["안 넘어가는", "부러지는", "흔들리는", "뿌리 뽑히는"],
+        category: "끈기와 도전",
+        meaning: "아무리 어려워 보이는 일도 끊임없이 노력하면 결국 이루어낼 수 있다는 격려의 속담이에요."
+      },
+      {
+        question: "뱁새가 황새 따라가다 [ 빈칸 ] 찢어진다",
+        blank: "가랑이",
+        initialHint: "ㄱㄹㅇ",
+        options: ["가랑이", "날개", "다리", "부리"],
+        category: "분수와 겸손",
+        meaning: "자신의 능력은 생각하지 않고 무작정 남을 흉내 내거나 욕심을 부리면 큰 곤경에 처해요."
+      },
+      {
+        question: "그림의 [ 빈칸 ]",
+        blank: "떡",
+        initialHint: "ㄸ",
+        options: ["떡", "밥", "과일", "꽃"],
+        category: "희망과 체념",
+        meaning: "보기에는 좋아 보이지만 실제로는 가질 수도 없고 먹을 수도 없는 헛된 것을 가리켜요."
+      },
+      {
+        question: "윗물이 맑아야 [ 빈칸 ]이/가 맑다",
+        blank: "아랫물",
+        initialHint: "ㅇㄹㅁ",
+        options: ["아랫물", "시냇물", "바닷물", "우물물"],
+        category: "솔선수범",
+        meaning: "윗사람이 바르고 모범을 보여야 아랫사람도 본받아서 올바르게 행동한다는 뜻이에요."
+      },
+      {
+        question: "금강산도 [ 빈칸 ]",
+        blank: "식후경",
+        initialHint: "ㅅㅎㄱ",
+        options: ["식후경", "구경거리", "눈앞에", "첫걸음"],
+        category: "기본과 식사",
+        meaning: "아무리 좋은 구경거리나 재미있는 일도 배가 불러야 비로소 즐길 수 있다는 뜻이에요."
+      },
+      {
+        question: "개구리 [ 빈칸 ] 적 생각 못 한다",
+        blank: "올챙이",
+        initialHint: "ㅇㅊㅇ",
+        options: ["올챙이", "알", "어릴", "어려운"],
+        category: "초심과 겸손",
+        meaning: "형편이 좋아진 사람이 옛날의 힘들고 서툴렀던 처지를 잊고 거만하게 군다는 뜻이에요."
+      },
+      {
+        question: "원숭이도 [ 빈칸 ]에서 떨어진다",
+        blank: "나무",
+        initialHint: "ㄴㅁ",
+        options: ["나무", "절벽", "나뭇가지", "지붕"],
+        category: "방심과 실수",
+        meaning: "아무리 능숙하고 실력이 뛰어난 사람이라도 실수할 때가 있으니 자만해선 안 돼요."
+      },
+      {
+        question: "구슬이 서 말이라도 [ 빈칸 ] 보배",
+        blank: "꿰어야",
+        initialHint: "ㄲㅇㅇ",
+        options: ["꿰어야", "닦아야", "모아야", "빛나야"],
+        category: "실천과 가치",
+        meaning: "아무리 좋은 재능이나 훌륭한 재료가 있어도 쓸모 있게 완성해야 진정한 가치가 있어요."
+      },
+      {
+        question: "도둑이 제 [ 빈칸 ] 저리다",
+        blank: "발",
+        initialHint: "ㅂ",
+        options: ["발", "손", "마음", "다리"],
+        category: "양심",
+        meaning: "나쁜 짓을 저지른 사람은 남이 알지 못해도 스스로 찔려서 불안해한다는 뜻이에요."
+      },
+      {
+        question: "믿는 도끼에 [ 빈칸 ] 찍힌다",
+        blank: "발등",
+        initialHint: "ㅂㄷ",
+        options: ["발등", "발가락", "손가락", "무릎"],
+        category: "신뢰와 주의",
+        meaning: "성공할 거라고 굳게 믿었던 일에 실패하거나, 믿었던 사람에게 배신을 당할 때 써요."
+      },
+      {
+        question: "사공이 많으면 배가 [ 빈칸 ]으로 간다",
+        blank: "산",
+        initialHint: "ㅅ",
+        options: ["산", "바다", "골짜기", "반대"],
+        category: "협동과 리더십",
+        meaning: "여러 사람이 저마다 자기 주장만 내세우면 일이 엉뚱한 방향으로 흘러가 망치게 돼요."
+      },
+      {
+        question: "천 리 길도 [ 빈칸 ]부터",
+        blank: "한 걸음",
+        initialHint: "ㅎ ㄱㄹ",
+        options: ["한 걸음", "첫날", "준비", "출발"],
+        category: "시작과 끈기",
+        meaning: "아무리 큰일이라도 가장 작은 첫걸음부터 시작해야 완수할 수 있다는 뜻이에요."
+      },
+      {
+        question: "시작이 [ 빈칸 ]이다",
+        blank: "반",
+        initialHint: "ㅂ",
+        options: ["반", "힘", "전부", "성공"],
+        category: "결단과 용기",
+        meaning: "망설이지 않고 시작하기만 해도 이미 절반은 해낸 것이나 마찬가지라는 용기를 줍니다."
+      },
+      {
+        question: "고래 싸움에 [ 빈칸 ] 등 터진다",
+        blank: "새우",
+        initialHint: "ㅅㅇ",
+        options: ["새우", "물고기", "오징어", "게"],
+        category: "곤경과 피해",
+        meaning: "힘센 사람들의 다툼 사이에 끼어 약한 사람이 애꿎게 큰 피해를 입는 상황을 비유해요."
+      },
+      {
+        question: "개똥도 [ 빈칸 ]에 쓰려면 없다",
+        blank: "약",
+        initialHint: "ㅇ",
+        options: ["약", "밭", "풀", "흙"],
+        category: "생활의 역설",
+        meaning: "평소에는 흔해서 눈여겨보지 않던 물건도 정작 꼭 필요할 때는 찾기 힘들다는 뜻이에요."
+      },
+      {
+        question: "배보다 [ 빈칸 ]이/가 더 크다",
+        blank: "배꼽",
+        initialHint: "ㅂㄲ",
+        options: ["배꼽", "손톱", "발목", "머리"],
+        category: "주객전도",
+        meaning: "기본적인 본체보다 덧붙은 부수적인 것에 더 많은 비용이나 노력이 들어감을 뜻해요."
+      },
+      {
+        question: "호랑이에게 물려가도 [ 빈칸 ]만 차리면 산다",
+        blank: "정신",
+        initialHint: "ㅈㅅ",
+        options: ["정신", "용기", "힘", "눈치"],
+        category: "침착과 위기극복",
+        meaning: "아무리 위험하고 다급한 위기를 겪더라도 정신을 바짝 차리면 빠져나갈 수 있어요."
+      },
+      {
+        question: "가는 날이 [ 빈칸 ]",
+        blank: "장날",
+        initialHint: "ㅈㄴ",
+        options: ["장날", "명절", "비 오는 날", "휴일"],
+        category: "우연한 일",
+        meaning: "일을 보러 갔다가 생각지도 못했던 뜻밖의 일을 우연히 마주치게 됨을 뜻해요."
+      },
+      {
+        question: "닭 쫓던 개 [ 빈칸 ] 쳐다본다",
+        blank: "지붕",
+        initialHint: "ㅈㅂ",
+        options: ["지붕", "하늘", "담장", "나무"],
+        category: "체념과 허탈",
+        meaning: "애써 하던 일이 실패하여 어찌할 도리가 없어 멍하니 바라보기만 함을 뜻해요."
+      },
+      {
+        question: "밑 빠진 독에 [ 빈칸 ] 붓기",
+        blank: "물",
+        initialHint: "ㅁ",
+        options: ["물", "기름", "모래", "곡식"],
+        category: "헛된 노력",
+        meaning: "아무리 많은 힘이나 돈을 쏟아부어도 전혀 보람이나 성과가 나타나지 않는 일을 말해요."
+      },
+      {
+        question: "누워서 [ 빈칸 ] 먹기",
+        blank: "떡",
+        initialHint: "ㄸ",
+        options: ["떡", "밥", "감", "사탕"],
+        category: "쉬운 일",
+        meaning: "일이 아주 쉽고 힘들이지 않고 해낼 수 있을 때 쓰는 유명한 속담이에요."
+      },
+      {
+        question: "빈 수레가 [ 빈칸 ]",
+        blank: "더 요란하다",
+        initialHint: "ㄷ ㅇㄹㅎㄷ",
+        options: ["더 요란하다", "더 무겁다", "더 빠르다", "더 흔들린다"],
+        category: "허세와 겸손",
+        meaning: "실력이 없고 아는 것이 적은 사람일수록 오히려 남 앞에서 더 시끄럽게 아는 척한다는 뜻이에요."
+      },
+      {
+        question: "뚝배기보다 [ 빈칸 ]이/가 좋다",
+        blank: "장맛",
+        initialHint: "ㅈㅁ",
+        options: ["장맛", "반찬", "밥맛", "김치"],
+        category: "내면의 가치",
+        meaning: "겉모습은 보잘것없어 보이지만 실제 내용이나 알맹이가 아주 훌륭함을 이르는 말이에요."
+      },
+      {
+        question: "꿀 먹은 [ 빈칸 ]",
+        blank: "벙어리",
+        initialHint: "ㅂㅇㄹ",
+        options: ["벙어리", "아이", "곰", "원숭이"],
+        category: "침묵",
+        meaning: "속에 할 말이 있어도 사정이 있어서 아무런 말도 하지 못하고 입을 다물고 있는 모양이에요."
+      },
+      {
+        question: "간에 기별도 [ 빈칸 ]",
+        blank: "안 간다",
+        initialHint: "ㅇ ㄱㄷ",
+        options: ["안 간다", "못 간다", "늦게 간다", "멀다"],
+        category: "음식과 양",
+        meaning: "먹은 음식의 양이 너무 적어서 배를 채우기에는 턱없이 부족하다는 뜻이에요."
+      },
+      {
+        question: "똥 묻은 개가 [ 빈칸 ] 묻은 개 나무란다",
+        blank: "겨",
+        initialHint: "ㄱ",
+        options: ["겨", "흙", "먼지", "풀"],
+        category: "내로남불",
+        meaning: "자신에게 더 큰 흠과 잘못이 있으면서 남의 작은 잘못을 탓하고 흉보는 것을 꼬집어요."
+      },
+      {
+        question: "얌전한 고양이 [ 빈칸 ]에 먼저 올라간다",
+        blank: "부뚜막",
+        initialHint: "ㅂㄸㅁ",
+        options: ["부뚜막", "지붕", "방바닥", "장독대"],
+        category: "겉과 속",
+        meaning: "겉으로는 얌전하고 순해 보이는 사람이 뒤에서는 엉큼하게 제 실속을 먼저 챙긴다는 뜻이에요."
+      },
+      {
+        question: "낫 놓고 [ 빈칸 ]도 모른다",
+        blank: "기역 자",
+        initialHint: "ㄱㅇ ㅈ",
+        options: ["기역 자", "니은 자", "글자", "이름"],
+        category: "무지와 배움",
+        meaning: "눈앞에 기역(ㄱ) 자 모양의 낫을 두고도 글자를 모를 만큼 아는 것이 전혀 없음을 뜻해요."
+      },
+      {
+        question: "핑계 없는 [ 빈칸 ] 없다",
+        blank: "무덤",
+        initialHint: "ㅁㄷ",
+        options: ["무덤", "사람", "이유", "실수"],
+        category: "변명",
+        meaning: "아무리 잘못을 저질렀더라도 물어보면 저마다 그럴듯한 변명거리가 있다는 뜻이에요."
+      },
+      {
+        question: "마른하늘에 [ 빈칸 ]",
+        blank: "날벼락",
+        initialHint: "ㄴㅂㄹ",
+        options: ["날벼락", "먹구름", "소나기", "번개"],
+        category: "뜻밖의 일",
+        meaning: "전혀 예상하지 못했던 뜻밖의 큰 재난이나 불행을 갑작스럽게 맞닥뜨렸을 때 써요."
+      }
+    ];
+
+    /* ==========================================================
+       2. Web Audio API 효과음 생성기
+       ========================================================== */
+    class SoundFX {
+      constructor() {
+        this.ctx = null;
+        this.enabled = true;
+      }
+
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          if (AudioContext) this.ctx = new AudioContext();
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume();
+        }
+      }
+
+      playClick() {
+        if (!this.enabled || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(440, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(800, this.ctx.currentTime + 0.08);
+          gain.gain.setValueAtTime(0.12, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.08);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.08);
+        } catch (e) {}
+      }
+
+      playCorrect() {
+        if (!this.enabled || !this.ctx) return;
+        try {
+          const notes = [523.25, 659.25, 783.99, 1046.50]; // 도-미-솔-도
+          notes.forEach((freq, i) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + i * 0.06);
+            gain.gain.setValueAtTime(0.16, this.ctx.currentTime + i * 0.06);
+            gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + i * 0.06 + 0.22);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(this.ctx.currentTime + i * 0.06);
+            osc.stop(this.ctx.currentTime + i * 0.06 + 0.22);
+          });
+        } catch (e) {}
+      }
+
+      playWrong() {
+        if (!this.enabled || !this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(260, this.ctx.currentTime);
+          osc.frequency.linearRampToValueAtTime(130, this.ctx.currentTime + 0.35);
+          gain.gain.setValueAtTime(0.18, this.ctx.currentTime);
+          gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.35);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.35);
+        } catch (e) {}
+      }
+
+      playGrandFanfare() {
+        if (!this.enabled || !this.ctx) return;
+        try {
+          const notes = [523.25, 659.25, 783.99, 1046.50, 1318.51];
+          notes.forEach((freq, idx) => {
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime + idx * 0.12);
+            gain.gain.setValueAtTime(0.25, this.ctx.currentTime + idx * 0.12);
+            gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + idx * 0.12 + 0.9);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start(this.ctx.currentTime + idx * 0.12);
+            osc.stop(this.ctx.currentTime + idx * 0.12 + 0.9);
+          });
+        } catch (e) {}
+      }
+    }
+
+    const sound = new SoundFX();
+
+    /* ==========================================================
+       3. 10연속 성공 축하 콘페티(폭죽) 애니메이션
+       ========================================================== */
+    class Confetti {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.animationId = null;
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+      }
+
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      }
+
+      start() {
+        this.particles = [];
+        const colors = ['#f87171', '#fb923c', '#facc15', '#4ade80', '#60a5fa', '#c084fc', '#e11d48'];
+        for (let i = 0; i < 110; i++) {
+          this.particles.push({
+            x: this.canvas.width / 2,
+            y: this.canvas.height / 2,
+            vx: (Math.random() - 0.5) * 18,
+            vy: (Math.random() - 0.7) * 20,
+            size: Math.random() * 8 + 5,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * 360,
+            rSpeed: (Math.random() - 0.5) * 12,
+            gravity: 0.35,
+            opacity: 1
+          });
+        }
+        if (!this.animationId) this.animate();
+      }
+
+      animate() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.particles.forEach((p, index) => {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += p.gravity;
+          p.rotation += p.rSpeed;
+          p.opacity -= 0.007;
+
+          this.ctx.save();
+          this.ctx.globalAlpha = Math.max(0, p.opacity);
+          this.ctx.translate(p.x, p.y);
+          this.ctx.rotate((p.rotation * Math.PI) / 180);
+          this.ctx.fillStyle = p.color;
+          this.ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+          this.ctx.restore();
+
+          if (p.opacity <= 0 || p.y > this.canvas.height) {
+            this.particles.splice(index, 1);
+          }
+        });
+
+        if (this.particles.length > 0) {
+          this.animationId = requestAnimationFrame(() => this.animate());
+        } else {
+          cancelAnimationFrame(this.animationId);
+          this.animationId = null;
+          this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        }
+      }
+    }
+
+    /* ==========================================================
+       4. 10연속 정답 챌린지 상태 관리
+       ========================================================== */
+    const TARGET_STREAK = 10;
+
+    const GameState = {
+      avatar: '🐯',
+      currentStreak: 0,
+      bestStreak: 0,
+      totalAnswered: 0,
+      currentQuestion: null,
+      availablePool: [],
+      masteredProverbs: [], // 이번 10연승 동안 맞힌 속담들
+      isLocked: false
+    };
+
+    // DOM 요소 캐시
+    const startScreen = document.getElementById('startScreen');
+    const quizScreen = document.getElementById('quizScreen');
+    const failModal = document.getElementById('failModal');
+    const successScreen = document.getElementById('successScreen');
+
+    const soundToggleBtn = document.getElementById('soundToggleBtn');
+    const soundIcon = document.getElementById('soundIcon');
+    const headerBestStreak = document.getElementById('headerBestStreak');
+
+    const startChallengeBtn = document.getElementById('startChallengeBtn');
+    const playerAvatar = document.getElementById('playerAvatar');
+    const currentStreakNum = document.getElementById('currentStreakNum');
+    const streakCheer = document.getElementById('streakCheer');
+    const streakProgressBar = document.getElementById('streakProgressBar');
+    const streakNodesContainer = document.getElementById('streakNodesContainer');
+
+    const categoryBadge = document.getElementById('categoryBadge');
+    const totalQuestionsAnswered = document.getElementById('totalQuestionsAnswered');
+    const questionText = document.getElementById('questionText');
+    const initialHintBtn = document.getElementById('initialHintBtn');
+    const meaningHintBtn = document.getElementById('meaningHintBtn');
+    const initialHintBox = document.getElementById('initialHintBox');
+    const initialHintText = document.getElementById('initialHintText');
+    const meaningHintBox = document.getElementById('meaningHintBox');
+    const meaningHintText = document.getElementById('meaningHintText');
+    const optionsContainer = document.getElementById('optionsContainer');
+
+    const correctFeedbackBox = document.getElementById('correctFeedbackBox');
+    const correctFeedbackTitle = document.getElementById('correctFeedbackTitle');
+    const correctProverbMeaning = document.getElementById('correctProverbMeaning');
+    const nextQuestionBtn = document.getElementById('nextQuestionBtn');
+
+    // 실패 모달 관련
+    const failedStreakCount = document.getElementById('failedStreakCount');
+    const failProverbFull = document.getElementById('failProverbFull');
+    const failProverbMeaning = document.getElementById('failProverbMeaning');
+    const retryStreakBtn = document.getElementById('retryStreakBtn');
+
+    // 성공 화면 관련
+    const confettiCanvas = document.getElementById('confettiCanvas');
+    const confetti = new Confetti(confettiCanvas);
+    const finalAttemptsCount = document.getElementById('finalAttemptsCount');
+    const newChallengeBtn = document.getElementById('newChallengeBtn');
+    const toggleMasteredListBtn = document.getElementById('toggleMasteredListBtn');
+    const masteredListContainer = document.getElementById('masteredListContainer');
+    const masteredProverbList = document.getElementById('masteredProverbList');
+
+    /* 배열 셔플 */
+    function shuffle(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    /* 10단계 인디케이터 구슬 렌더링 */
+    function initStreakNodes() {
+      streakNodesContainer.innerHTML = '';
+      for (let i = 1; i <= TARGET_STREAK; i++) {
+        const node = document.createElement('div');
+        node.id = `streakNode_${i}`;
+        node.className = `flex flex-col items-center justify-center py-1 rounded-xl border transition-all text-xs font-black ${
+          i <= GameState.currentStreak 
+            ? 'bg-orange-500 border-orange-600 text-white shadow-sm scale-105' 
+            : 'bg-white border-slate-200 text-slate-400'
+        }`;
+        node.innerHTML = `
+          <span class="text-xs md:text-sm">${i <= GameState.currentStreak ? '🔥' : '⚪'}</span>
+          <span class="text-[9px] md:text-[10px] mt-0.5">${i}</span>
+        `;
+        streakNodesContainer.appendChild(node);
+      }
+    }
+
+    function updateStreakUI() {
+      currentStreakNum.textContent = GameState.currentStreak;
+      headerBestStreak.textContent = `${GameState.bestStreak}/${TARGET_STREAK}`;
+      totalQuestionsAnswered.textContent = GameState.totalAnswered;
+
+      // 프로그레스 바 너비 (%)
+      const percent = (GameState.currentStreak / TARGET_STREAK) * 100;
+      streakProgressBar.style.width = `${percent}%`;
+
+      // 노드 구슬 업데이트
+      for (let i = 1; i <= TARGET_STREAK; i++) {
+        const node = document.getElementById(`streakNode_${i}`);
+        if (!node) continue;
+        if (i <= GameState.currentStreak) {
+          node.className = 'flex flex-col items-center justify-center py-1 rounded-xl border border-orange-600 bg-orange-500 text-white shadow-sm scale-105 transition-all';
+          node.innerHTML = `<span class="text-xs md:text-sm">🔥</span><span class="text-[9px] md:text-[10px] mt-0.5 font-bold">${i}</span>`;
+        } else {
+          node.className = 'flex flex-col items-center justify-center py-1 rounded-xl border border-slate-200 bg-white text-slate-400 transition-all';
+          node.innerHTML = `<span class="text-xs md:text-sm">⚪</span><span class="text-[9px] md:text-[10px] mt-0.5">${i}</span>`;
+        }
+      }
+
+      // 응원 문구 변경
+      if (GameState.currentStreak === 0) {
+        streakCheer.textContent = '10연승을 향해 출발! 🚀';
+        streakCheer.className = 'text-xs font-extrabold text-slate-700 bg-slate-100 border border-slate-300 px-2.5 py-1 rounded-full';
+      } else if (GameState.currentStreak <= 3) {
+        streakCheer.textContent = `좋은 출발! 🔥 ${GameState.currentStreak}연속!`;
+        streakCheer.className = 'text-xs font-extrabold text-amber-800 bg-amber-100 border border-amber-300 px-2.5 py-1 rounded-full';
+      } else if (GameState.currentStreak <= 6) {
+        streakCheer.textContent = `절반 돌파! 🔥 ${GameState.currentStreak}연속!`;
+        streakCheer.className = 'text-xs font-extrabold text-orange-800 bg-orange-100 border border-orange-300 px-2.5 py-1 rounded-full';
+      } else if (GameState.currentStreak <= 8) {
+        streakCheer.textContent = `고지가 보여요! 🔥 ${GameState.currentStreak}연속!`;
+        streakCheer.className = 'text-xs font-extrabold text-rose-800 bg-rose-100 border border-rose-300 px-2.5 py-1 rounded-full animate-bounceSmall';
+      } else if (GameState.currentStreak === 9) {
+        streakCheer.textContent = `마지막 1문제! 심호흡 하세요! 👑`;
+        streakCheer.className = 'text-xs font-extrabold text-yellow-900 bg-yellow-200 border border-yellow-400 px-2.5 py-1 rounded-full animate-pulse';
+      }
+    }
+
+    /* 무작위 새 문제 가져오기 (연속 퀴즈 동안 중복 최소화) */
+    function getNextQuestion() {
+      if (GameState.availablePool.length === 0) {
+        GameState.availablePool = shuffle(PROVERB_DATABASE);
+      }
+      return GameState.availablePool.pop();
+    }
+
+    /* 새 문제 렌더링 */
+    function loadQuestion() {
+      GameState.isLocked = false;
+      correctFeedbackBox.classList.add('hidden');
+      initialHintBox.classList.add('hidden');
+      meaningHintBox.classList.add('hidden');
+
+      GameState.currentQuestion = getNextQuestion();
+      const q = GameState.currentQuestion;
+
+      categoryBadge.textContent = q.category;
+      initialHintText.textContent = q.initialHint;
+      meaningHintText.textContent = q.meaning;
+
+      // 빈칸 문제 텍스트 강조
+      const parts = q.question.split('[ 빈칸 ]');
+      questionText.innerHTML = `
+        ${parts[0]}<span class="inline-block text-orange-600 bg-orange-100/90 border-b-4 border-orange-400 px-3 py-0.5 rounded-xl mx-1 shadow-sm font-extrabold animate-pop">[ ? ]</span>${parts[1] || ''}
+      `;
+
+      // 선택지 4개 셔플 및 버튼 생성
+      optionsContainer.innerHTML = '';
+      const shuffledOptions = shuffle(q.options);
+      shuffledOptions.forEach((optText, index) => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'option-choice w-full bg-white hover:bg-amber-50 active:scale-95 border-2 border-slate-200 hover:border-amber-400 text-slate-800 font-bold text-base md:text-xl py-3.5 px-4 rounded-2xl shadow-sm transition flex items-center justify-between text-left group';
+        btn.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 md:w-8 md:h-8 rounded-full bg-slate-100 group-hover:bg-amber-200 text-slate-700 flex items-center justify-center text-xs md:text-sm font-extrabold transition">
+              ${index + 1}
+            </span>
+            <span>${optText}</span>
+          </div>
+          <span class="choice-mark opacity-0 text-lg transition">👉</span>
+        `;
+        btn.addEventListener('click', () => handleAnswer(optText, btn));
+        optionsContainer.appendChild(btn);
+      });
+
+      updateStreakUI();
+    }
+
+    /* 정답 및 오답 판정 */
+    function handleAnswer(selectedText, clickedBtn) {
+      if (GameState.isLocked) return;
+      GameState.isLocked = true;
+      GameState.totalAnswered++;
+
+      const q = GameState.currentQuestion;
+      const isCorrect = selectedText === q.blank;
+
+      // 빈칸을 실제 정답으로 변환 표시
+      const parts = q.question.split('[ 빈칸 ]');
+      questionText.innerHTML = `
+        ${parts[0]}<span class="inline-block text-white ${isCorrect ? 'bg-emerald-500' : 'bg-rose-500'} px-3 py-0.5 rounded-xl mx-1 shadow-md font-extrabold animate-pop">${q.blank}</span>${parts[1] || ''}
+      `;
+
+      // 보기 버튼들 비활성화 및 정답/오답 스타일 부여
+      const buttons = optionsContainer.querySelectorAll('.option-choice');
+      buttons.forEach(btn => {
+        btn.disabled = true;
+        btn.classList.remove('hover:bg-amber-50', 'hover:border-amber-400', 'active:scale-95');
+        const text = btn.querySelector('.flex span:last-child').textContent.trim();
+        const mark = btn.querySelector('.choice-mark');
+
+        if (text === q.blank) {
+          btn.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+          mark.textContent = '✅';
+          mark.classList.remove('opacity-0');
+        } else if (text === selectedText && !isCorrect) {
+          btn.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-900', 'animate-shake');
+          mark.textContent = '❌';
+          mark.classList.remove('opacity-0');
+        } else {
+          btn.classList.add('opacity-40');
+        }
+      });
+
+      if (isCorrect) {
+        // 정답 시 스트릭 +1
+        sound.playCorrect();
+        GameState.currentStreak++;
+        if (GameState.currentStreak > GameState.bestStreak) {
+          GameState.bestStreak = GameState.currentStreak;
+        }
+
+        // 맞힌 속담 기록
+        GameState.masteredProverbs.push({
+          streakNum: GameState.currentStreak,
+          proverb: q.question.replace('[ 빈칸 ]', `[${q.blank}]`),
+          meaning: q.meaning
+        });
+
+        updateStreakUI();
+
+        // 10연승 달성 여부 체크
+        if (GameState.currentStreak >= TARGET_STREAK) {
+          setTimeout(() => {
+            showSuccessScreen();
+          }, 800);
+          return;
+        }
+
+        // 다음 문제로 넘어가기 버튼 표시
+        correctFeedbackTitle.textContent = `정답입니다! 현재 🔥 ${GameState.currentStreak}연속 성공!`;
+        correctProverbMeaning.textContent = `💡 속담 뜻: ${q.meaning}`;
+        correctFeedbackBox.classList.remove('hidden');
+
+      } else {
+        // 오답 시 즉시 스트릭 0으로 리셋 및 모달 팝업
+        sound.playWrong();
+        const lastStreak = GameState.currentStreak;
+        GameState.currentStreak = 0; // 스트릭 리셋!
+        GameState.masteredProverbs = []; // 이번 연승 초기화
+
+        setTimeout(() => {
+          showFailModal(q, lastStreak);
+        }, 700);
+      }
+    }
+
+    /* 오답 모달 노출 */
+    function showFailModal(proverbObj, achievedStreak) {
+      failedStreakCount.textContent = achievedStreak;
+      failProverbFull.innerHTML = proverbObj.question.replace('[ 빈칸 ]', `<span class="text-emerald-600 font-extrabold">[${proverbObj.blank}]</span>`);
+      failProverbMeaning.textContent = proverbObj.meaning;
+      failModal.classList.remove('hidden');
+    }
+
+    /* 10연속 대성공 화면 */
+    function showSuccessScreen() {
+      sound.playGrandFanfare();
+      confetti.start();
+
+      quizScreen.classList.add('hidden');
+      successScreen.classList.remove('hidden');
+      finalAttemptsCount.textContent = `${GameState.totalAnswered}문제`;
+
+      // 맞힌 10개 속담 리스트 렌더링
+      masteredProverbList.innerHTML = '';
+      GameState.masteredProverbs.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'p-2.5 rounded-xl bg-white border border-slate-200';
+        div.innerHTML = `
+          <div class="font-bold text-slate-800 flex items-center justify-between">
+            <span>${item.streakNum}연속. ${item.proverb}</span>
+            <span class="text-emerald-600">통과</span>
+          </div>
+          <div class="text-[11px] text-slate-500 mt-1">${item.meaning}</div>
+        `;
+        masteredProverbList.appendChild(div);
+      });
+    }
+
+    /* ==========================================================
+       5. 이벤트 리스너 바인딩
+       ========================================================== */
+
+    // 음소거 토글
+    soundToggleBtn.addEventListener('click', () => {
+      sound.init();
+      sound.enabled = !sound.enabled;
+      soundIcon.textContent = sound.enabled ? '🔊' : '🔇';
+      soundToggleBtn.classList.toggle('opacity-50', !sound.enabled);
+    });
+
+    // 아바타 선택
+    document.querySelectorAll('.avatar-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        sound.init();
+        sound.playClick();
+        document.querySelectorAll('.avatar-btn').forEach(b => {
+          b.classList.remove('border-orange-500', 'bg-orange-50', 'shadow-sm');
+          b.classList.add('border-slate-200', 'bg-slate-50');
+        });
+        btn.classList.remove('border-slate-200', 'bg-slate-50');
+        btn.classList.add('border-orange-500', 'bg-orange-50', 'shadow-sm');
+        GameState.avatar = btn.getAttribute('data-avatar');
+      });
+    });
+
+    // 초성 힌트 토글
+    initialHintBtn.addEventListener('click', () => {
+      sound.playClick();
+      initialHintBox.classList.toggle('hidden');
+    });
+
+    // 속담 뜻 힌트 토글
+    meaningHintBtn.addEventListener('click', () => {
+      sound.playClick();
+      meaningHintBox.classList.toggle('hidden');
+    });
+
+    // 다음 문제 버튼
+    nextQuestionBtn.addEventListener('click', () => {
+      sound.playClick();
+      loadQuestion();
+    });
+
+    // 10연속 퀴즈 시작
+    startChallengeBtn.addEventListener('click', () => {
+      sound.init();
+      sound.playClick();
+
+      GameState.currentStreak = 0;
+      GameState.totalAnswered = 0;
+      GameState.availablePool = shuffle(PROVERB_DATABASE);
+      GameState.masteredProverbs = [];
+      playerAvatar.textContent = GameState.avatar;
+
+      initStreakNodes();
+      startScreen.classList.add('hidden');
+      successScreen.classList.add('hidden');
+      quizScreen.classList.remove('hidden');
+
+      loadQuestion();
+    });
+
+    // 실패 모달 -> 처음부터 0연승 재도전
+    retryStreakBtn.addEventListener('click', () => {
+      sound.playClick();
+      failModal.classList.add('hidden');
+      GameState.currentStreak = 0;
+      GameState.masteredProverbs = [];
+      updateStreakUI();
+      loadQuestion();
+    });
+
+    // 대성공 후 새로운 10연승 또 도전
+    newChallengeBtn.addEventListener('click', () => {
+      sound.playClick();
+      successScreen.classList.add('hidden');
+      GameState.currentStreak = 0;
+      GameState.totalAnswered = 0;
+      GameState.masteredProverbs = [];
+      GameState.availablePool = shuffle(PROVERB_DATABASE);
+      updateStreakUI();
+      quizScreen.classList.remove('hidden');
+      loadQuestion();
+    });
+
+    // 맞힌 속담 복습 창 토글
+    toggleMasteredListBtn.addEventListener('click', () => {
+      sound.playClick();
+      masteredListContainer.classList.toggle('hidden');
+    });
+
+  </script>
+</body>
+</html>
